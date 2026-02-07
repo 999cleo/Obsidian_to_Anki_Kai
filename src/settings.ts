@@ -585,6 +585,7 @@ export class SettingsTab extends PluginSettingTab {
 		new Setting(container)
 			.setName("Patterns to ignore")
 			.setDesc(descriptionFragment)
+			.setClass("anki-vertical-setting")
 			.addTextArea(text => {
 				text.setValue(plugin.settings.IGNORED_FILE_GLOBS.join("\n"))
 					.setPlaceholder("Examples:\n**/*.excalidraw.md\nTemplates/**\n**/private/**")

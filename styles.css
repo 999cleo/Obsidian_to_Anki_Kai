@@ -183,3 +183,21 @@
   margin-bottom: 12px;
   color: var(--text-normal);
 }
+
+.anki-vertical-setting {
+  display: block !important;
+  margin-bottom: 18px;
+}
+
+.anki-vertical-setting .setting-item-info {
+  margin-bottom: 8px;
+}
+
+.anki-vertical-setting .setting-item-control {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+.anki-vertical-setting .setting-item-control textarea {
+  width: 100%;
+}
