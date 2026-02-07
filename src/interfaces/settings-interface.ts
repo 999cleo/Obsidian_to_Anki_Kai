@@ -41,7 +41,8 @@ export interface PluginSettings {
 		"Save Note ID to Frontmatter": boolean,
 		"Render Clozes in Reading View": boolean,
 		"Render Clozes - Highlight": boolean,
-		"Cloze Deletion Context Menu": boolean
+		"Cloze Deletion Context Menu": boolean,
+		"Show Status Bar": boolean
 	},
 	IGNORED_FILE_GLOBS: string[]
 }

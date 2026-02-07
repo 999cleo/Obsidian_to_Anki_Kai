@@ -24,7 +24,8 @@ const defaultDescs = {
 	"Bulk Delete IDs": "Enables 'Delete all IDs in file' menu. Deletes Anki notes for IDs found in the selected file and removes the IDs.",
 	"Save Note ID to Frontmatter": "Save the Anki Note ID (nid) to the YAML frontmatter instead of an inline comment. Applies ONLY to files that correspond to a single Anki note. Multiple notes in a file will still use inline IDs.",
 	"Render Clozes in Reading View": "Render {{c1::cloze::hint}} as flattened text in Reading View.",
-	"Render Clozes - Highlight": "Apply highlight style to the rendered text."
+	"Render Clozes - Highlight": "Apply highlight style to the rendered text.",
+	"Show Status Bar": "Show the Anki sync status indicator in the status bar."
 }
 
 export const DEFAULT_IGNORED_FILE_GLOBS = [
@@ -125,6 +126,19 @@ export class SettingsTab extends PluginSettingTab {
 		// Other defaults
 		this.addDefaultSettings(container, plugin)
 
+		// Show Status Bar setting
+		new Setting(container)
+			.setName("Show Status Bar")
+			.setDesc(defaultDescs["Show Status Bar"])
+			.addToggle(toggle => toggle
+				.setValue(plugin.settings.Defaults["Show Status Bar"])
+				.onChange((value) => {
+					plugin.settings.Defaults["Show Status Bar"] = value
+					plugin.saveAllData()
+					plugin.configureStatusBar()
+				})
+			)
+
 		// Ignored Files section
 		container.createEl('h3', { text: 'Ignored Files & Folders', cls: 'anki-settings-section' })
 		this.setup_ignore_files(container, plugin)
@@ -186,10 +200,13 @@ export class SettingsTab extends PluginSettingTab {
 		if (!(plugin.settings["Defaults"].hasOwnProperty("Cloze Deletion Context Menu"))) {
 			plugin.settings["Defaults"]["Cloze Deletion Context Menu"] = false
 		}
+		if (!(plugin.settings["Defaults"].hasOwnProperty("Show Status Bar"))) {
+			plugin.settings["Defaults"]["Show Status Bar"] = true
+		}
 
 		for (let key of Object.keys(defaultDescs)) {
 			// Skip Scan Directory (already added above) and Regex
-			if (key === "Scan Directory" || key === "Scan Tags" || key === "Regex" || key === "Bulk Delete IDs" || key === "Regex Required Tags" || key === "Smart Scan" || key === "Add File Link - Link Label" || key === "CurlyCloze - Keyword" || key === "CurlyCloze - Highlights to Clozes" || key === "Save Note ID to Frontmatter" || key === "Render Clozes in Reading View" || key === "Render Clozes - Highlight" || key === "Cloze Deletion Context Menu") {
+			if (key === "Scan Directory" || key === "Scan Tags" || key === "Regex" || key === "Bulk Delete IDs" || key === "Regex Required Tags" || key === "Smart Scan" || key === "Add File Link - Link Label" || key === "CurlyCloze - Keyword" || key === "CurlyCloze - Highlights to Clozes" || key === "Save Note ID to Frontmatter" || key === "Render Clozes in Reading View" || key === "Render Clozes - Highlight" || key === "Cloze Deletion Context Menu" || key === "Show Status Bar") {
 				continue
 			}
 

@@ -60,7 +60,8 @@ export default class MyPlugin extends Plugin {
 				"Save Note ID to Frontmatter": false,
 				"Render Clozes in Reading View": false,
 				"Render Clozes - Highlight": false,
-				"Cloze Deletion Context Menu": false
+				"Cloze Deletion Context Menu": false,
+				"Show Status Bar": true
 			},
 			IGNORED_FILE_GLOBS: DEFAULT_IGNORED_FILE_GLOBS,
 		}
@@ -485,6 +486,15 @@ export default class MyPlugin extends Plugin {
 		container.createSpan({ text: text, cls: className })
 	}
 
+	configureStatusBar() {
+		if (!this.statusBarItem) return
+		if (this.settings.Defaults["Show Status Bar"]) {
+			this.statusBarItem.style.display = ''
+		} else {
+			this.statusBarItem.style.display = 'none'
+		}
+	}
+
 	async onload() {
 		console.log('loading Obsidian_to_Anki...');
 		addIcon('anki', ANKI_ICON)
@@ -519,6 +529,7 @@ export default class MyPlugin extends Plugin {
 		// Add status bar
 		this.statusBarItem = this.addStatusBarItem()
 		this.updateStatusBar("idle")
+		this.configureStatusBar()
 
 		this.addSettingTab(new SettingsTab(this.app, this));
 
