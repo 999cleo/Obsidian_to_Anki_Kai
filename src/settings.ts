@@ -112,22 +112,15 @@ export class SettingsTab extends PluginSettingTab {
 			}).open()
 		})
 
-		// Scan Tags
-		new Setting(container)
-			.setName('Scan Tags')
-			.setDesc(defaultDescs['Scan Tags'])
-			.addText(text => text
-				.setPlaceholder('tag1, tag2')
-				.setValue(plugin.settings.Defaults["Scan Tags"] || '')
-				.onChange((value) => {
-					plugin.settings.Defaults["Scan Tags"] = value
-					plugin.saveAllData()
-				}))
-
 		// Other defaults
 		this.addDefaultSettings(container, plugin)
 
+		// Tag Settings section
+		container.createEl('h3', { text: 'Tag Settings', cls: 'anki-settings-section' })
+		this.addTagSettings(container, plugin)
+
 		// Show Status Bar setting
+		container.createEl('h3', { text: 'Other Settings', cls: 'anki-settings-section' })
 		new Setting(container)
 			.setName("Show Status Bar")
 			.setDesc(defaultDescs["Show Status Bar"])
@@ -209,8 +202,25 @@ export class SettingsTab extends PluginSettingTab {
 		}
 
 		for (let key of Object.keys(defaultDescs)) {
-			// Skip Scan Directory (already added above) and Regex
-			if (key === "Scan Directory" || key === "Scan Tags" || key === "Regex" || key === "Bulk Delete IDs" || key === "Regex Required Tags" || key === "Smart Scan" || key === "Add File Link - Link Label" || key === "CurlyCloze - Keyword" || key === "CurlyCloze - Highlights to Clozes" || key === "Save Note ID to Frontmatter" || key === "Render Clozes in Reading View" || key === "Render Clozes - Highlight" || key === "Cloze Deletion Context Menu" || key === "Show Status Bar") {
+			// Skip Scan Directory (already added above), tag settings (handled in addTagSettings), and other special settings
+			if (key === "Scan Directory" ||
+				key === "Scan Tags" ||
+				key === "Tag" ||
+				key === "Add Obsidian Tags" ||
+				key === "Add Obsidian YAML Tags" ||
+				key === "Format Obsidian Tags as Anki Hierarchical Tags" ||
+				key === "Regex" ||
+				key === "Bulk Delete IDs" ||
+				key === "Regex Required Tags" ||
+				key === "Smart Scan" ||
+				key === "Add File Link - Link Label" ||
+				key === "CurlyCloze - Keyword" ||
+				key === "CurlyCloze - Highlights to Clozes" ||
+				key === "Save Note ID to Frontmatter" ||
+				key === "Render Clozes in Reading View" ||
+				key === "Render Clozes - Highlight" ||
+				key === "Cloze Deletion Context Menu" ||
+				key === "Show Status Bar") {
 				continue
 			}
 
@@ -316,6 +326,68 @@ export class SettingsTab extends PluginSettingTab {
 					)
 			}
 		}
+	}
+
+	private addTagSettings(container: HTMLElement, plugin: any) {
+		// Scan Tags
+		new Setting(container)
+			.setName('Scan Tags')
+			.setDesc(defaultDescs['Scan Tags'])
+			.addText(text => text
+				.setPlaceholder('tag1, tag2')
+				.setValue(plugin.settings.Defaults["Scan Tags"] || '')
+				.onChange((value) => {
+					plugin.settings.Defaults["Scan Tags"] = value
+					plugin.saveAllData()
+				}))
+
+		// Default Tag
+		new Setting(container)
+			.setName('Tag')
+			.setDesc(defaultDescs['Tag'])
+			.addText(text => text
+				.setPlaceholder('tag1, tag2')
+				.setValue(plugin.settings.Defaults["Tag"] || '')
+				.onChange((value) => {
+					plugin.settings.Defaults["Tag"] = value
+					plugin.saveAllData()
+				}))
+
+		// Add Obsidian Tags
+		new Setting(container)
+			.setName("Add Obsidian Tags")
+			.setDesc(defaultDescs["Add Obsidian Tags"])
+			.addToggle(toggle => toggle
+				.setValue(plugin.settings.Defaults["Add Obsidian Tags"])
+				.onChange((value) => {
+					plugin.settings.Defaults["Add Obsidian Tags"] = value
+					plugin.saveAllData()
+				})
+			)
+
+		// Add Obsidian YAML Tags
+		new Setting(container)
+			.setName("Add Obsidian YAML Tags")
+			.setDesc(defaultDescs["Add Obsidian YAML Tags"])
+			.addToggle(toggle => toggle
+				.setValue(plugin.settings.Defaults["Add Obsidian YAML Tags"])
+				.onChange((value) => {
+					plugin.settings.Defaults["Add Obsidian YAML Tags"] = value
+					plugin.saveAllData()
+				})
+			)
+
+		// Format Obsidian Tags as Anki Hierarchical Tags
+		new Setting(container)
+			.setName("Format Obsidian Tags as Anki Hierarchical Tags")
+			.setDesc(defaultDescs["Format Obsidian Tags as Anki Hierarchical Tags"])
+			.addToggle(toggle => toggle
+				.setValue(plugin.settings.Defaults["Format Obsidian Tags as Anki Hierarchical Tags"])
+				.onChange((value) => {
+					plugin.settings.Defaults["Format Obsidian Tags as Anki Hierarchical Tags"] = value
+					plugin.saveAllData()
+				})
+			)
 	}
 
 	private setupNoteTypesTab() {
