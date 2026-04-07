@@ -62,7 +62,8 @@ export default class MyPlugin extends Plugin {
 				"Render Clozes in Reading View": false,
 				"Render Clozes - Highlight": false,
 				"Cloze Deletion Context Menu": false,
-				"Show Status Bar": true
+				"Show Status Bar": true,
+				"AnkiConnect API Key": ""
 			},
 			IGNORED_FILE_GLOBS: DEFAULT_IGNORED_FILE_GLOBS,
 		}
@@ -333,7 +334,12 @@ export default class MyPlugin extends Plugin {
 			try {
 				await AnkiConnect.invoke('modelNames')
 			} catch (e) {
-				new Notice("Error: couldn't connect to Anki! Make sure Anki is running.")
+				const errorMsg = String(e).toLowerCase();
+				if (errorMsg.includes('key')) {
+					new Notice("Error: couldn't connect to Anki! API key is incorrect.")
+				} else {
+					new Notice("Error: couldn't connect to Anki! Make sure Anki is running.")
+				}
 				console.error(e)
 				progressModal.close()
 				this.isSyncing = false
@@ -501,9 +507,15 @@ export default class MyPlugin extends Plugin {
 		addIcon('anki', ANKI_ICON)
 		try {
 			this.settings = await this.loadSettings()
+			AnkiConnect.setApiKey(this.settings.Defaults["AnkiConnect API Key"] || "");
 		}
 		catch (e) {
-			new Notice("Couldn't connect to Anki! Check console for error message.")
+			const errorMsg = String(e).toLowerCase();
+			if (errorMsg.includes('key')) {
+				new Notice("Couldn't connect to Anki! API key is incorrect. Check console for error message.")
+			} else {
+				new Notice("Couldn't connect to Anki! Check console for error message.")
+			}
 			return
 		}
 
@@ -520,7 +532,12 @@ export default class MyPlugin extends Plugin {
 				new Notice("Fields dictionary successfully generated!")
 			}
 			catch (e) {
-				new Notice("Couldn't connect to Anki! Check console for error message.")
+				const errorMsg = String(e).toLowerCase();
+				if (errorMsg.includes('key')) {
+					new Notice("Couldn't connect to Anki! API key is incorrect. Check console for error message.")
+				} else {
+					new Notice("Couldn't connect to Anki! Check console for error message.")
+				}
 				return
 			}
 		}

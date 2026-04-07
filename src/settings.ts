@@ -26,7 +26,8 @@ const defaultDescs = {
 	"Save Note ID to Frontmatter": "Save the Anki Note ID (nid) to the YAML frontmatter instead of an inline comment. Applies ONLY to files that correspond to a single Anki note. Multiple notes in a file will still use inline IDs.",
 	"Render Clozes in Reading View": "Render {{c1::cloze::hint}} as flattened text in Reading View.",
 	"Render Clozes - Highlight": "Apply highlight style to the rendered text.",
-	"Show Status Bar": "Show the Anki sync status indicator in the status bar."
+	"Show Status Bar": "Show the Anki sync status indicator in the status bar.",
+	"AnkiConnect API Key": "The API key configured in AnkiConnect settings (leave blank if none)."
 }
 
 export const DEFAULT_IGNORED_FILE_GLOBS = [
@@ -228,6 +229,9 @@ export class SettingsTab extends PluginSettingTab {
 		if (!(plugin.settings["Defaults"].hasOwnProperty("Show Status Bar"))) {
 			plugin.settings["Defaults"]["Show Status Bar"] = true
 		}
+		if (!(plugin.settings["Defaults"].hasOwnProperty("AnkiConnect API Key"))) {
+			plugin.settings["Defaults"]["AnkiConnect API Key"] = ""
+		}
 
 		for (let key of Object.keys(defaultDescs)) {
 			// Skip Scan Directory (already added above), tag settings (handled in addTagSettings), and other special settings
@@ -248,7 +252,8 @@ export class SettingsTab extends PluginSettingTab {
 				key === "Render Clozes in Reading View" ||
 				key === "Render Clozes - Highlight" ||
 				key === "Cloze Deletion Context Menu" ||
-				key === "Show Status Bar") {
+				key === "Show Status Bar" ||
+				key === "AnkiConnect API Key") {
 				continue
 			}
 
@@ -581,6 +586,20 @@ export class SettingsTab extends PluginSettingTab {
 		this.setup_import_export(container, plugin)
 
 		container.createEl('h3', { text: 'Experimental Features', cls: 'anki-settings-section' })
+
+		new Setting(container)
+			.setName("AnkiConnect API Key")
+			.setDesc(defaultDescs["AnkiConnect API Key"])
+			.addText(text => {
+				text.inputEl.type = "password"
+				text.setPlaceholder('Enter API Key')
+				text.setValue(plugin.settings.Defaults["AnkiConnect API Key"] || '')
+					.onChange((value) => {
+						plugin.settings.Defaults["AnkiConnect API Key"] = value
+						plugin.saveAllData()
+						AnkiConnect.setApiKey(value)
+					})
+			})
 
 		new Setting(container)
 			.setName("Smart Scan")

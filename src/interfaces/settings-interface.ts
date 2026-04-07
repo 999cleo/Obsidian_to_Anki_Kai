@@ -43,7 +43,8 @@ export interface PluginSettings {
 		"Render Clozes in Reading View": boolean,
 		"Render Clozes - Highlight": boolean,
 		"Cloze Deletion Context Menu": boolean,
-		"Show Status Bar": boolean
+		"Show Status Bar": boolean,
+		"AnkiConnect API Key": string
 	},
 	IGNORED_FILE_GLOBS: string[]
 }

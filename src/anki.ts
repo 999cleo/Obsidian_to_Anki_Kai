@@ -1,11 +1,18 @@
 const ANKI_PORT: number = 8765
 
+let API_KEY: string = ""
+
+export function setApiKey(key: string) {
+	API_KEY = key
+}
+
 import { AnkiConnectNote } from './interfaces/note-interface'
 
 export interface AnkiConnectRequest {
 	action: string,
 	version: 6,
-	params: any
+	params: any,
+	key?: string
 }
 
 export function invoke(action: string, params={}) {
@@ -34,7 +41,11 @@ export function invoke(action: string, params={}) {
         });
 
         xhr.open('POST', 'http://127.0.0.1:' + ANKI_PORT.toString());
-        xhr.send(JSON.stringify({action, version: 6, params}));
+        let payload: any = {action, version: 6, params};
+        if (API_KEY) {
+            payload.key = API_KEY;
+        }
+        xhr.send(JSON.stringify(payload));
     });
 }
 
@@ -58,7 +69,11 @@ export function parse<T>(response: {error: string, result: T}): T {
 // All the rest of these functions only return request objects as opposed to actually carrying out the action. For efficiency!
 
 function request(action: string, params={}): AnkiConnectRequest {
-	return {action, version:6, params}
+	let req: AnkiConnectRequest = {action, version:6, params}
+	if (API_KEY) {
+		req.key = API_KEY;
+	}
+	return req;
 }
 
 export function multi(actions: AnkiConnectRequest[]): AnkiConnectRequest {

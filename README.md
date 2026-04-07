@@ -196,5 +196,15 @@ Adds context menu items and commands to easily create or remove Anki clozes from
   3. The text is converted to `{{c<N>::text}}`.
   4. The cloze number `<N>` is automatically calculated to fill gaps or increment from the highest existing number.
 
+### AnkiConnect API Key Support
+
+You can now configure an API key to securely connect to AnkiConnect.
+This is useful if you have enabled authentication in your AnkiConnect add-on settings to prevent unauthorized access.
+
+- **Enable**: Go to Settings -> Advanced -> Experimental Features and enter your key in "**AnkiConnect API Key**".
+- **Usage**:
+  - The API key will be automatically included in all requests to Anki.
+  - If you haven't configured an API key in AnkiConnect, simply leave this field blank.
+
 ---
 For basic usage and configurations, please refer to the [Original Wiki](https://github.com/Pseudonium/Obsidian_to_Anki/wiki).
